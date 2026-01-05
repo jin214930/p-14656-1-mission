@@ -14,13 +14,13 @@ import org.springframework.context.annotation.Configuration;
 public class BaseInitData {
     private final PostService postService;
 
-
     @Bean
     public ApplicationRunner baseInitDataRunner() {
         return args -> {
             work1();
             work2();
             work3();
+            work4();
         };
     }
 
@@ -52,6 +52,17 @@ public class BaseInitData {
         for (Post post : postService.getPosts()) {
             Post fetchedPost = postService.getPost(post.getId());
             log.debug("조회된 Post: {}", fetchedPost);
+        }
+    }
+
+    private void work4() {
+        log.debug("Post 수정");
+
+        for (Post post : postService.getPosts()) {
+            String newTitle = post.getTitle() + " [Updated]";
+            String newContent = post.getContent() + " This content has been updated.";
+            Post updatedPost = postService.updatePost(post.getId(), newTitle, newContent);
+            log.debug("Updated Post: {}", updatedPost);
         }
     }
 }
