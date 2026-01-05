@@ -29,13 +29,11 @@ public class PostService {
     }
 
     public Post getPost(String id) {
-        return postRepository.findById(id)
-                .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 게시글을 찾을 수 없습니다.".formatted(id)));
+        return findById(id);
     }
 
     public Post updatePost(String id, String title, String content) {
-        Post post = postRepository.findById(id)
-                .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 게시글을 찾을 수 없습니다.".formatted(id)));
+        Post post = findById(id);
 
         if (title != null) {
             post.setTitle(title);
@@ -47,5 +45,16 @@ public class PostService {
         post.setModifiedDate(OffsetDateTime.now());
 
         return postRepository.save(post);
+    }
+
+    public void delete(String id) {
+        Post post = findById(id);
+
+        postRepository.delete(post);
+    }
+
+    private Post findById(String id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 게시글을 찾을 수 없습니다.".formatted(id)));
     }
 }
