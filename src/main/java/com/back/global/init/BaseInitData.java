@@ -20,6 +20,7 @@ public class BaseInitData {
         return args -> {
             work1();
             work2();
+            work3();
         };
     }
 
@@ -37,12 +38,20 @@ public class BaseInitData {
         log.debug("Post entity 개수: {}", postService.count());
     }
 
-
     private void work2() {
         log.debug("전체 Post 조회");
 
         for (Post post : postService.getPosts()) {
             log.debug("Post: {}", post);
+        }
+    }
+
+    private void work3() {
+        log.debug("Post 단건 조회");
+
+        for (Post post : postService.getPosts()) {
+            Post fetchedPost = postService.getPost(post.getId());
+            log.debug("조회된 Post: {}", fetchedPost);
         }
     }
 }

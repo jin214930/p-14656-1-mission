@@ -2,7 +2,9 @@ package com.back.domain.post.post.service;
 
 import com.back.domain.post.post.document.Post;
 import com.back.domain.post.post.repository.PostRepository;
+import com.back.global.exception.DomainException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class PostService {
     }
 
     public Post getPost(String id) {
-        return postRepository.findById(id).get();
+        return postRepository.findById(id)
+                .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 게시글을 찾을 수 없습니다.".formatted(id)));
     }
 }
