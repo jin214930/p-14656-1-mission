@@ -1,5 +1,6 @@
 package com.back.global.init;
 
+import com.back.domain.post.comment.document.Comment;
 import com.back.domain.post.comment.service.CommentService;
 import com.back.domain.post.post.document.Post;
 import com.back.domain.post.post.service.PostService;
@@ -81,6 +82,17 @@ public class BaseInitData {
     }
 
     private void work6() {
+        if (commentService.count() == 0) {
+            log.debug("샘플 Comment 데이터 생성");
+            for (int i = 1; i <= 5; i++) {
+                Post post = postService.create("Post for Comment " + i, "Content for post " + i, "Author" + i);
+                String content = "This is a comment number " + i + " for post " + post.getId();
+                String author = "Commenter" + i;
+                Comment comment = commentService.create(post, content, author);
+                log.debug("Created Comment: {}", comment);
+            }
+        }
+
         log.debug("Comment 개수: {}", commentService.count());
     }
 }
