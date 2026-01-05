@@ -29,11 +29,25 @@ public class CommentService {
     }
 
     public Comment getComment(String id) {
-        return commentRepository.findById(id)
-                .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 댓글을 찾을 수 없습니다.".formatted(id)));
+        return findById(id);
     }
 
-    public List<Comment> findByPostId(String id) {
+    public List<Comment> getCommentByPost(String id) {
         return commentRepository.findByPostId(id);
+    }
+
+    public Comment updateComment(String id, String content) {
+        Comment comment = findById(id);
+
+        if (content != null) {
+            comment.setContent(content);
+        }
+
+        return commentRepository.save(comment);
+    }
+
+    private Comment findById(String id) {
+        return commentRepository.findById(id)
+                .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 댓글을 찾을 수 없습니다.".formatted(id)));
     }
 }
