@@ -44,7 +44,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public void delete(String id) {
+    public void deletePost(String id) {
         Post post = findById(id);
 
         postRepository.delete(post);
@@ -54,4 +54,5 @@ public class PostService {
         return postRepository.findById(id)
                 .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 게시글을 찾을 수 없습니다.".formatted(id)));
     }
+
 }

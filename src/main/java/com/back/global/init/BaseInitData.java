@@ -32,6 +32,7 @@ public class BaseInitData {
             work8();
             work9();
             work10();
+            work11();
         };
     }
 
@@ -80,7 +81,7 @@ public class BaseInitData {
     private void work5() {
         log.debug("Post 삭제");
         for (Post post : postService.getPosts()) {
-            postService.delete(post.getId());
+            postService.deletePost(post.getId());
             log.debug("Deleted Post: {}", post.getId());
         }
 
@@ -137,5 +138,14 @@ public class BaseInitData {
             log.debug("Updated Comment: {}", updatedComment);
         }
 
+    }
+
+    private void work11() {
+        log.debug("Comment 삭제");
+        for (var comment : commentService.getComments()) {
+            commentService.deleteComment(comment);
+            log.debug("Deleted Comment with ID: {}", comment.getId());
+        }
+        log.debug("삭제 후 남은 Comment 개수: {}", commentService.count());
     }
 }

@@ -46,6 +46,10 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
+    public void deleteComment(Comment comment) {
+        commentRepository.delete(comment);
+    }
+
     private Comment findById(String id) {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 댓글을 찾을 수 없습니다.".formatted(id)));
