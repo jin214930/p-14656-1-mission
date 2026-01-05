@@ -27,4 +27,24 @@ public class Post {
 
     @Field(type = FieldType.Date, format = DateFormat.date_time)
     private OffsetDateTime modifiedDate;
+
+    public Post(String title, String content, String author) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.createdDate = OffsetDateTime.now();
+        this.modifiedDate = OffsetDateTime.now();
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", author='" + author + '\'' +
+                ", createdDate=" + createdDate +
+                ", modifiedDate=" + modifiedDate +
+                '}';
+    }
 }
