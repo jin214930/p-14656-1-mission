@@ -24,4 +24,8 @@ public class PostService {
     public List<Post> getPosts() {
         return postRepository.findAll();
     }
+
+    public Post getPost(String id) {
+        return postRepository.findById(id).get();
+    }
 }
