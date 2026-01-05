@@ -32,4 +32,8 @@ public class CommentService {
         return commentRepository.findById(id)
                 .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 댓글을 찾을 수 없습니다.".formatted(id)));
     }
+
+    public List<Comment> findByPostId(String id) {
+        return commentRepository.findByPostId(id);
+    }
 }

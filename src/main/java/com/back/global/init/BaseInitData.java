@@ -10,6 +10,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 @Configuration
 @Slf4j
 @RequiredArgsConstructor
@@ -28,6 +30,7 @@ public class BaseInitData {
             work6();
             work7();
             work8();
+            work9();
         };
     }
 
@@ -84,7 +87,7 @@ public class BaseInitData {
     }
 
     private void work6() {
-        if (commentService.count() == 0) {
+        if (postService.count() == 0) {
             log.debug("샘플 Comment 데이터 생성");
             for (int i = 1; i <= 5; i++) {
                 Post post = postService.create("Post for Comment " + i, "Content for post " + i, "Author" + i);
@@ -112,5 +115,15 @@ public class BaseInitData {
             Comment fetchedComment = commentService.getComment(comment.getId());
             log.debug("조회된 Comment: {}", fetchedComment);
         }
+    }
+
+    private void work9() {
+        log.debug("Post 별 Comment 조회");
+
+        for (Post post : postService.getPosts()) {
+            List<Comment> comments = commentService.findByPostId(post.getId());
+            log.debug("Post ID: {} 에 대한 Comments: {}", post.getId(), comments);
+        }
+        log.debug("Comment 조회 완료");
     }
 }
