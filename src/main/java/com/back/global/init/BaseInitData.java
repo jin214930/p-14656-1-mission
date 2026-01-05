@@ -27,6 +27,7 @@ public class BaseInitData {
             work5();
             work6();
             work7();
+            work8();
         };
     }
 
@@ -102,6 +103,14 @@ public class BaseInitData {
 
         for (Comment comment : commentService.getComments()) {
             log.debug("Existing Comment: {}", comment);
+        }
+    }
+
+    private void work8() {
+        log.debug("Comment 단건 조회");
+        for (Comment comment : commentService.getComments()) {
+            Comment fetchedComment = commentService.getComment(comment.getId());
+            log.debug("조회된 Comment: {}", fetchedComment);
         }
     }
 }
