@@ -1,4 +1,4 @@
-package com.back.global;
+package com.back.global.init;
 
 import com.back.domain.post.post.service.PostService;
 import lombok.RequiredArgsConstructor;
