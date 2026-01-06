@@ -123,7 +123,7 @@ public class BaseInitData {
         log.debug("Post 별 Comment 조회");
 
         for (Post post : postService.getPosts()) {
-            List<Comment> comments = commentService.getCommentByPost(post.getId());
+            List<Comment> comments = commentService.getCommentsByPost(post.getId());
             log.debug("Post ID: {} 에 대한 Comments: {}", post.getId(), comments);
         }
         log.debug("Comment 조회 완료");

@@ -3,6 +3,7 @@ package com.back.domain.post.comment.service;
 import com.back.domain.post.comment.document.Comment;
 import com.back.domain.post.comment.repository.CommentRepository;
 import com.back.domain.post.post.document.Post;
+import com.back.domain.post.post.repository.PostRepository;
 import com.back.global.exception.DomainException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
     public long count() {
         return commentRepository.count();
@@ -32,7 +34,7 @@ public class CommentService {
         return findById(id);
     }
 
-    public List<Comment> getCommentByPost(String id) {
+    public List<Comment> getCommentsByPost(String id) {
         return commentRepository.findByPostId(id);
     }
 
