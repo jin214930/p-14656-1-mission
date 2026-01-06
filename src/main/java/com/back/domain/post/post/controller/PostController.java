@@ -70,4 +70,11 @@ public class PostController {
 
         return ResponseEntity.ok(post);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String id) {
+        postService.deletePost(id);
+
+        return ResponseEntity.noContent().build();
+    }
 }
