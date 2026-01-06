@@ -38,6 +38,18 @@ public class PostService {
         return findById(id);
     }
 
+    public Page<Post> search(String keyword, String searchType, int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+
+        return switch (searchType) {
+            case "title" -> postRepository.findByTitleContaining(keyword, pageable);
+            case "content" -> postRepository.findByContentContaining(keyword, pageable);
+            case "titleAndContent" ->
+                    postRepository.findByTitleContainingOrContentContaining(keyword, keyword, pageable);
+            default -> postRepository.findAll(pageable);
+        };
+    }
+
     public Post updatePost(String id, String title, String content) {
         Post post = findById(id);
 
@@ -61,5 +73,4 @@ public class PostService {
         return postRepository.findById(id)
                 .orElseThrow(() -> new DomainException(HttpStatus.NOT_FOUND.value(), "%s번 게시글을 찾을 수 없습니다.".formatted(id)));
     }
-
 }

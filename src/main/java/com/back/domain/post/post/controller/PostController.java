@@ -59,6 +59,16 @@ public class PostController {
     ) {
     }
 
+    @GetMapping("/search")
+    public Page<Post> search(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "titleAndContent") String searchType,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return postService.search(keyword, searchType, page, size);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Post> update(
             @PathVariable String id,
