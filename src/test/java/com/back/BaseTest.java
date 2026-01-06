@@ -23,6 +23,6 @@ public class BaseTest {
 
     @DynamicPropertySource
     public static void setElasticsearchProperties(org.springframework.test.context.DynamicPropertyRegistry registry) {
-        registry.add("spring.elasticsearch.uris", elasticsearchContainer::getHttpHostAddress);
+        registry.add("spring.elasticsearch.uris", () -> "http://" + elasticsearchContainer.getHttpHostAddress());
     }
 }
