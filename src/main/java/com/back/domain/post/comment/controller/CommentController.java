@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,9 +46,13 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Comment>> getComments(@PathVariable String postId) {
+    public ResponseEntity<Page<Comment>> getComments(
+            @PathVariable String postId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
         postService.getPost(postId);
-        List<Comment> comments = commentService.getCommentsByPost(postId);
+        Page<Comment> comments = commentService.getCommentsByPost(postId, page, size);
 
         return ResponseEntity.ok(comments);
     }
@@ -66,7 +71,7 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Comment> update(
+    public ResponseEntity<Comment> updateComment(
             @PathVariable String postId,
             @PathVariable String id,
             @RequestBody @Valid UpdateCommentRequest request
@@ -77,7 +82,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable String postId, @PathVariable String id) {
+    public ResponseEntity<Void> deleteComment(@PathVariable String postId, @PathVariable String id) {
         postService.getPost(postId);
         commentService.deleteComment(commentService.getComment(id));
         return ResponseEntity.noContent().build();
