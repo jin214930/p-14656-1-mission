@@ -1,10 +1,10 @@
 package com.back.global.exception;
 
 public class DomainException extends RuntimeException {
-    int resultCode;
+    int code;
 
-    public DomainException(int resultCode, String message) {
+    public DomainException(int code, String message) {
         super(message);
-        this.resultCode = resultCode;
+        this.code = code;
     }
 }
