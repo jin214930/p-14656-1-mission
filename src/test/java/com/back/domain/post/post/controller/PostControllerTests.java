@@ -1,5 +1,9 @@
 package com.back.domain.post.post.controller;
 
+import com.back.domain.post.post.document.Post;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,7 +24,10 @@ public class PostControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    ;
 
     @Test
     @DisplayName("POST /api/v1/posts - 실패 (title 누락)")
@@ -70,5 +77,46 @@ public class PostControllerTests {
                                 .contentType("application/json")
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray());
+    }
+
+
+    @Test
+    @DisplayName("GET /api/v1/posts/{id} - 실패")
+    void t4() throws Exception {
+        mockMvc.perform(
+                get("/api/v1/posts/{id}", "nonexistent-id")
+                        .contentType("application/json")
+        ).andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/posts/{id} - 성공")
+    void t5() throws Exception {
+        // 먼저 포스트를 생성
+        String response = mockMvc.perform(
+                        post("/api/v1/posts")
+                                .contentType("application/json")
+                                .content(
+                                        objectMapper.writeValueAsBytes(
+                                                new PostController.CreatePostRequest(
+                                                        "Test Title for GetById",
+                                                        "Test Content for GetById",
+                                                        "Test Author for GetById"
+                                                )
+                                        )
+                                )
+                ).andExpect(status().isCreated())
+                .andReturn().getResponse()
+                .getContentAsString();
+
+        Post createdPost = objectMapper.readValue(response, Post.class);
+
+        mockMvc.perform(get("/api/v1/posts/{id}", createdPost.getId())
+                        .contentType("application/json")
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(createdPost.getId()))
+                .andExpect(jsonPath("title").value("Test Title for GetById"))
+                .andExpect(jsonPath("content").value("Test Content for GetById"))
+                .andExpect(jsonPath("author").value("Test Author for GetById"));
     }
 }

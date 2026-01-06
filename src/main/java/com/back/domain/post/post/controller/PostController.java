@@ -42,4 +42,9 @@ public class PostController {
 
         return ResponseEntity.ok(posts);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> getPost(@PathVariable String id) {
+        return ResponseEntity.ok(postService.getPost(id));
+    }
 }
