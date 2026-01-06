@@ -4,6 +4,8 @@ import com.back.domain.post.post.document.Post;
 import com.back.domain.post.post.repository.PostRepository;
 import com.back.global.exception.DomainException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,11 @@ public class PostService {
 
     public List<Post> getPosts() {
         return postRepository.findAll();
+    }
+
+    public Page<Post> getPosts(int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+        return postRepository.findAll(pageable);
     }
 
     public Post getPost(String id) {
