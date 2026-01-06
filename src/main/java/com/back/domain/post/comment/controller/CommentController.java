@@ -57,4 +57,22 @@ public class CommentController {
         postService.getPost(postId);
         return ResponseEntity.ok(commentService.getComment(id));
     }
+
+    public record UpdateCommentRequest(
+            @NotBlank(message = "Content must not be blank")
+            @Size(max = 500, min = 1)
+            String content
+    ) {
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Comment> update(
+            @PathVariable String postId,
+            @PathVariable String id,
+            @RequestBody @Valid UpdateCommentRequest request
+    ) {
+        postService.getPost(postId);
+        Comment comment = commentService.updateComment(id, request.content);
+        return ResponseEntity.ok(comment);
+    }
 }
