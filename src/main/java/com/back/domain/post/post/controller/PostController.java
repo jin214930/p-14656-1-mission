@@ -47,4 +47,27 @@ public class PostController {
     public ResponseEntity<Post> getPost(@PathVariable String id) {
         return ResponseEntity.ok(postService.getPost(id));
     }
+
+    record UpdatePostRequest(
+            @NotBlank(message = "Title must not be blank")
+            @Size(max = 100, min = 1)
+            String title,
+            @NotBlank(message = "Content must not be blank")
+            String content
+    ) {
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Post> update(
+            @PathVariable String id,
+            @RequestBody @Valid UpdatePostRequest request
+    ) {
+        Post post = postService.updatePost(
+                id,
+                request.title,
+                request.content
+        );
+
+        return ResponseEntity.ok(post);
+    }
 }
