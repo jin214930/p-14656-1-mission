@@ -1,5 +1,6 @@
 package com.back.domain.post.post.controller;
 
+import com.back.BaseTest;
 import com.back.domain.post.post.document.Post;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,14 +20,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-public class PostControllerTests {
+public class PostControllerTests extends BaseTest {
     @Autowired
     private MockMvc mockMvc;
 
     private final ObjectMapper objectMapper = new ObjectMapper()
             .registerModule(new JavaTimeModule())
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    ;
 
     @Test
     @DisplayName("POST /api/v1/posts - 실패 (title 누락)")
