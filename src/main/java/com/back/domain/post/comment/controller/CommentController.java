@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/posts/{postId}/comments")
 @RequiredArgsConstructor
@@ -61,6 +59,19 @@ public class CommentController {
     public ResponseEntity<Comment> getComment(@PathVariable String postId, @PathVariable String id) {
         postService.getPost(postId);
         return ResponseEntity.ok(commentService.getComment(id));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Comment>> search(
+            @PathVariable String postId,
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "contentAndAuthor") String searchType,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        postService.getPost(postId);
+        Page<Comment> comments = commentService.search(postId, keyword, searchType, page, size);
+        return ResponseEntity.ok(comments);
     }
 
     public record UpdateCommentRequest(

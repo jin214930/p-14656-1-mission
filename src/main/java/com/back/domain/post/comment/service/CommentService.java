@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +44,18 @@ public class CommentService {
     public Page<Comment> getCommentsByPost(String id, int page, int size) {
         PageRequest pageable = PageRequest.of(page, size);
         return commentRepository.findByPostId(id, pageable);
+    }
+
+    public Page<Comment> search(String postId, String keyword, String searchType, int page, int size) {
+        PageRequest pageable = PageRequest.of(page, size);
+
+        return switch (searchType) {
+            case "content" -> commentRepository.findByPostIdAndContentContaining(postId, keyword, pageable);
+            case "author" -> commentRepository.findByPostIdAndAuthor(postId, keyword, pageable);
+            case "contentAndAuthor" ->
+                    commentRepository.findByPostIdAndContentContainingOrPostIdAndAuthor(postId, keyword, postId, keyword, pageable);
+            default -> commentRepository.findAll(pageable);
+        };
     }
 
     public Comment updateComment(String id, String content) {
