@@ -75,4 +75,11 @@ public class CommentController {
         Comment comment = commentService.updateComment(id, request.content);
         return ResponseEntity.ok(comment);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable String postId, @PathVariable String id) {
+        postService.getPost(postId);
+        commentService.deleteComment(commentService.getComment(id));
+        return ResponseEntity.noContent().build();
+    }
 }
